@@ -67,6 +67,12 @@ View More at `here <http://imgur.com/a/RAIb1>`_. and `here <http://imgur.com/a/T
 Installation
 ============
 
+Prerequisites
+
+latest awesome http://awesome.naquadah.org
+For wallpapers: make `Wallpapers` directory at home (~/) containing wallpapers of your choice , named as `wallbase_X.jpg` where : X = integer , e.g. wallbase_2.jpg 
+
+
 Using git you can have the full master branch: ::
 
     git clone https://github.com/aregee/configs.git

@@ -61,7 +61,7 @@ Gallery
 
 .. image:: http://imgur.com/vqpR6c6.png
 
-View More at `here <http://imgur.com/a/RAIb1>`_. and `here <http://imgur.com/a/TJsdx/all>`_.
+View More at `here <http://imgur.com/a/RAIb1>`_. and `here <http://imgur.com/a/TJsdx/all>`_. `some more <http://imgur.com/a/exo9d>`_.
 
 
 

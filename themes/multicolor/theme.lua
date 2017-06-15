@@ -15,9 +15,9 @@ end
 theme.confdir                       = os.getenv("HOME") .. "/.config/awesome/themes/multicolor"
 theme.wallpaper                     = theme.confdir .. "/wall.png"
 theme.selected			    = function ()
-    os.execute("source /home/innovaccer/.profile")
+    os.execute("source /home/satyam/.profile")
     return function ()
-        selected = os.getenv('WALLDIR') or "xplicitwp"
+        selected = os.getenv('WALLDIR') or "Wallpapers"
         return selected
     end
 end
@@ -25,14 +25,14 @@ theme.mode			   = {}
 theme.wallpaperdir		   = function ()
     return function()
         home = os.getenv("HOME")
-        confpath = "/.config/awesome/walls/"
+        confpath = "/Wallpapers/walls/"
         return string.format("%s%s%s", home, confpath, theme.selected()())
     end
 end
 theme.count			    = function ()
     return tonumber(theme.mode.count())
 end
-theme.mode.count		    = theme.helpers.sysexecute(string.format("ls -1 %s | wc -l", theme.wallpaperdir()()))
+theme.mode.count		    = theme.helpers.sysexecute(string.format("ls -1 %s  | wc -l", theme.wallpaperdir()()))
 theme.font                          = "Tamsyn 10.5"
 --theme.taglist_font                =
 theme.menu_bg_normal                = "#000000"

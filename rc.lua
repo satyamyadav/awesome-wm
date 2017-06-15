@@ -15,11 +15,10 @@ local beautiful = require("beautiful")
 local naughty   = require("naughty")
 local drop      = require("scratchdrop")
 local lain      = require("lain")
-
+local rng       = require("rng")
 --require("battery")
 
 -- }}}
-
 
 -- {{{ Error handling
 if awesome.startup_errors then
@@ -51,12 +50,15 @@ function run_once(cmd)
   end
   awful.util.spawn_with_shell("pgrep -u $USER -x " .. findme .. " > /dev/null || (" .. cmd .. ")")
 end
+run_once("xrdb -load .Xresources")
 run_once("urxvtd")
 run_once("unclutter -root")
-run_once("locker.sh")
+run_once("~/.config/awesome/locker.sh")
 run_once("nm-applet")
-run_once("redshift-gtk")
-run_once("clementine")
+-- run_once("redshift-gtk")
+-- run_once("clementine")
+run_once("slack")
+-- run_once("xrandr --output HDMI2 --above eDP1 --mode 1920x1200")
 --run_once("~/.config/awesome/start_weechat")
 -- }}}
 
@@ -75,7 +77,7 @@ editor_cmd  = terminal .. " -e " .. editor
 chat_cmd    = terminal .. " -e"  .. chat
 
 -- user defined
-browser    = "google-chrome"
+browser    = "google-chrome --profile-directory=Default"
 browser2   = "firefox"
 lightwb    = "dwb"
 incognito  = browser .. " --incognito"
@@ -84,7 +86,8 @@ graphics   = "gimp"
 filexplore = "thunar"
 netflix_tab = browser .. " --new-window netflix.com"
 notes = lightwb .. " -n keep.google.com/u/0/"
-_notes = lightwb .. " -n keep.google.com/u/1/"
+notes = lightwb .. " -n keep.google.com/u/1/"
+screenlock = "xautolock -locknow"
 --wallpaperdir = os.getenv("WALLDIR") or "xplicitwp"
 
 
@@ -116,14 +119,16 @@ tagsconf[1] = {
 }}
 
 tagsconf[2] = {
-   names = { "home", "dev", "term", "music"},
-   layout = { layouts[1], layouts[7], layouts[3], layouts[4]
+   names = { "home", "dev", "term", "web", "proc"},
+   layout = { layouts[1], layouts[7], layouts[3], layouts[4], layouts[3]
 }}
 
 tagsconf[3] = {
-   names = { "home", "web","studio","proc"},
-   layout = { layouts[1], layouts[7], layouts[3], layouts[2]
-}}
+   names = { "home", "web","dev","studio"},
+   layout = { layouts[1], layouts[7], layouts[3], layouts[2], layouts[4]
+ }}
+
+
 
 for s = 1, screen.count() do
    tags[s] = awful.tag(tagsconf[s].names, s, tagsconf[s].layout)
@@ -136,43 +141,43 @@ if screen.count() == 3 then
     for t = 1, 8 do
       tags[1][t]:connect_signal("property::selected", function (tag)
        if not tag.selected then return end
-       r = math.random(theme.count())
-       theme.wallpaper = theme.wallpaperdir()() .. "/wallheaven_" .. r .. ".\jpg"
+       r = rng.randomInt(1, theme.count())
+       theme.wallpaper = theme.wallpaperdir()() .. "/wallbase_" .. r .. ".\jpg"
 	 gears.wallpaper.maximized(beautiful.wallpaper, 1, true)
 	end)
     end
     for t = 1, 4 do
       tags[2][t]:connect_signal("property::selected", function (tag)
        if not tag.selected then return end
-       r = math.random(theme.count())
-       theme.wallpaper =  theme.wallpaperdir()() .. "/wallheaven_" .. r .. ".\jpg"
+       r = rng.randomInt(1, theme.count())
+       theme.wallpaper =  theme.wallpaperdir()() .. "/wallbase_" .. r .. ".\jpg"
 	 gears.wallpaper.maximized(beautiful.wallpaper, 2, 'black')
       end)
     end
     for t = 1, 4 do
       tags[3][t]:connect_signal("property::selected", function (tag)
        if not tag.selected then return end
-       r = math.random(theme.count())
-       theme.wallpaper = theme.wallpaperdir()() .. "/wallheaven_" .. r .. ".\jpg"
+       r = rng.randomInt(1, theme.count())
+       theme.wallpaper = theme.wallpaperdir()() .. "/wallbase_" .. r .. ".\jpg"
 	 gears.wallpaper.maximized(beautiful.wallpaper, 3, 'black')
 	end)
     end
 end
 
-if screen.count() == 2 then 
+if screen.count() == 2 then
  for t = 1, 8 do
    tags[1][t]:connect_signal("property::selected", function (tag)
      if not tag.selected then return end
-     r = math.random(theme.count())
-	 theme.wallpaper =  theme.wallpaperdir()() .. "/wallheaven_" .. r .. ".\jpg"
+     r = rng.randomInt(1, theme.count())
+	 theme.wallpaper =  theme.wallpaperdir()() .. "/wallbase_" .. r .. ".\jpg"
 	gears.wallpaper.maximized(beautiful.wallpaper, 1, true)
-     end)	
+     end)
  end
-   for t = 1, 4 do
+   for t = 1, 5 do
       tags[2][t]:connect_signal("property::selected", function (tag)
        if not tag.selected then return end
-       r = math.random(theme.count())
-       theme.wallpaper =  theme.wallpaperdir()() .. "/wallheaven_" .. r .. ".\jpg"
+       r = rng.randomInt(1, theme.count())
+       theme.wallpaper =  theme.wallpaperdir()() .. "/wallbase_" .. r .. ".\jpg"
 	 gears.wallpaper.maximized(beautiful.wallpaper, 2, true)
       end)
     end
@@ -182,27 +187,28 @@ if screen.count() == 1 then
  for t = 1, 8 do
 	tags[1][t]:connect_signal("property::selected", function (tag)
 	if not tag.selected then return end
-	r = math.random(theme.count())
-	    theme.wallpaper =  theme.wallpaperdir()() .. "/wallheaven_" .. r .. ".\jpg"
+	r = rng.randomInt(1, theme.count())
+	    theme.wallpaper =  theme.wallpaperdir()() .. "/wallbase_" .. r .. ".\jpg"
 	 gears.wallpaper.maximized(beautiful.wallpaper, 1, true)
 	end)
  end
 end
 
 
-if screen.count() > 3 then 
+if screen.count() > 3 then
   for s=1, screen.count() do
     for t=1, 8 do
 	tags[s][t]:connect_signal("property::selected", function (tag)
 	if not tag.selected then return end
-	r = math.random(theme.count())
-	    theme.wallpaper =  theme.wallpaperdir()() .. "/wallheaven_" .. r .. ".\jpg"
+	r = math.random(1, theme.count())
+	    theme.wallpaper =  theme.wallpaperdir()() .. "/wallbase_" .. r .. ".\jpg"
 	 gears.wallpaper.maximized(beautiful.wallpaper, s, true)
 	end)
     end
   end
 end
---}} 
+
+--}}
 -- {{{ Freedesktop Menu
 mymainmenu = awful.menu.new({ items = require("menugen").build_menu(),
                               theme = { height = 16, width = 130 }})
@@ -259,14 +265,14 @@ tempwidget = lain.widgets.temp({
 baticon = wibox.widget.imagebox(beautiful.widget_batt)
 gray   = "#94928F"
 batwidget = lain.widgets.bat({
-    battery =  "BAT1",
+    battery =  "BAT0",
     settings = function()
         bat_perc = bat_now.perc
         if bat_perc == "N/A" then bat_perc = "Plug" end
         widget:set_markup(markup(gray, " Bat ") .. bat_perc .. " ")
     end
 })
-awful.key({ modkey }, "s", function () awful.util.spawn(gui_editor) end)
+-- awful.key({ modkey }, "s", function () awful.util.spawn(gui_editor) end)
 -- Net checker
 netstatwidget = lain.widgets.net({
     settings = function()
@@ -292,12 +298,20 @@ volumewidget = lain.widgets.alsa({
 netdownicon = wibox.widget.imagebox(beautiful.widget_netdown)
 --netdownicon.align = "middle"
 netdowninfo = wibox.widget.textbox()
+netssid = wibox.widget.textbox()
 netupicon = wibox.widget.imagebox(beautiful.widget_netup)
 --netupicon.align = "middle"
 netupinfo = lain.widgets.net({
     settings = function()
+        file_helper = io.popen("iwgetid -r")
+        ssid = file_helper:read("*all")
+
+        if (ssid == "") then
+          ssid = "Not connected"
+        end
         widget:set_markup(markup("#e54c62", net_now.sent .. " "))
         netdowninfo:set_markup(markup("#87af5f", net_now.received .. " "))
+        netssid:set_markup(markup("#cc66ff", ssid .. " "))
     end
 })
 
@@ -448,6 +462,7 @@ for s = 1, screen.count() do
     if s == 1 then right_layout:add(wibox.widget.systray()) end
     right_layout:add(mpdicon)
     right_layout:add(mpdwidget)
+    right_layout:add(netssid)
     right_layout:add(netstatwidget)
     right_layout:add(netdownicon)
     right_layout:add(netdowninfo)
@@ -609,22 +624,25 @@ globalkeys = awful.util.table.join(
     -- ALSA volume control
     awful.key({ altkey }, "Up",
         function ()
-            os.execute(string.format("amixer set %s 1%%+", volumewidget.channel))
+            -- os.execute(string.format("amixer set %s 1%%+", volumewidget.channel))
+            os.execute(string.format("amixer sset Master 1+", volumewidget.channel))
             volumewidget.update()
         end),
     awful.key({ altkey }, "Down",
         function ()
-            os.execute(string.format("amixer set %s 1%%-", volumewidget.channel))
+            -- os.execute(string.format("amixer set %s 1%%-", volumewidget.channel))
+            os.execute(string.format("amixer sset Master 1-", volumewidget.channel))
             volumewidget.update()
         end),
     awful.key({ altkey }, "m",
         function ()
-            os.execute(string.format("amixer -D pulse set %s toggle", volumewidget.channel))
+            -- os.execute(string.format("amixer -D pulse set %s toggle", volumewidget.channel))
+            os.execute(string.format("amixer sset Master toggle", volumewidget.channel))
             volumewidget.update()
         end),
     awful.key({ altkey, "Control" }, "m",
         function ()
-            os.execute(string.format("amixer set %s 100%%", volumewidget.channel))
+            os.execute(string.format("amixer -D pulse set Master 1+ toggle", volumewidget.channel))
             volumewidget.update()
         end),
 
@@ -663,7 +681,7 @@ globalkeys = awful.util.table.join(
       end),
     awful.key({}, "XF86AudioMute",
       function ()
-          os.execute(string.format("amixer set %s toggle", volumewidget.channel))
+          os.execute(string.format("amixer -D pulse set Master 1+ toggle", volumewidget.channel))
           volumewidget.update()
       end),
 
@@ -695,6 +713,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey }, "s", function () awful.util.spawn(gui_editor) end),
     awful.key({ altkey }, "e", function () awful.util.spawn(filexplore) end),
     awful.key({ modkey }, "g", function () awful.util.spawn(os.execute(chat_cmd)) end),
+    awful.key({ modkey, "Control" }, "l", function () awful.util.spawn("xautolock -locknow") end),
 
     -- Prompt
     awful.key({ modkey }, "r", function () mypromptbox[mouse.screen]:run() end),
@@ -785,7 +804,7 @@ root.keys(globalkeys)
 
 for s = 1, screen.count() do
 
-  if s < 2 then
+  if screen.count() == 2 then
     awful.rules.rules = {
         -- All clients will match this rule.
         { rule = { },
@@ -802,10 +821,10 @@ for s = 1, screen.count() do
               properties = { floating = true } },
 
         { rule = { class = "Atom" },
-               properties = { tag = tags[1][2] } },
+               properties = { tag = tags[2][2] } },
 
-        { rule = { class = "Clementine" },
-           properties = { tag = tags[1][5] } },
+        -- { rule = { class = "Clementine" },
+        --    properties = { tag = tags[1][5] } },
 
     }
   else
@@ -819,10 +838,13 @@ for s = 1, screen.count() do
                          buttons = clientbuttons,
     	                   size_hints_honor = false } },
         { rule = { class = "Atom" },
-               properties = { tag = tags[2][2] } },
+               properties = { tag = tags[1][2] } },
 
-        { rule = { class = "Clementine" },
-           properties = { tag = tags[2][4] } },
+        -- { rule = { class = "Clementine" },
+        --    properties = { tag = tags[1][5] } },
+
+        { rule = { class = "Slack" },
+           properties = { tag = tags[1][6] } }
 
     }
   end
@@ -845,7 +867,7 @@ client.connect_signal("manage", function (c, startup)
          end
      end)
 
-    local titlebars_enabled = false
+    local titlebars_enabled = true
     if titlebars_enabled and (c.type == "normal" or c.type == "dialog") then
         -- buttons for the titlebar
         local buttons = awful.util.table.join(
